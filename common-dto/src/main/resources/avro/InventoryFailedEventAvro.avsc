@@ -1,0 +1,10 @@
+{
+  "namespace": "com.ecommerce.common.event",
+  "type": "record",
+  "name": "InventoryFailedEventAvro",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "customerId", "type": "string"},
+    {"name": "reason", "type": "string"}
+  ]
+}

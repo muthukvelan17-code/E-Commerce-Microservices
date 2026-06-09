@@ -1,0 +1,10 @@
+{
+  "namespace": "com.ecommerce.common.event",
+  "type": "record",
+  "name": "OrderItemAvro",
+  "fields": [
+    {"name": "productId", "type": "string"},
+    {"name": "quantity", "type": "int"},
+    {"name": "price", "type": "double"}
+  ]
+}

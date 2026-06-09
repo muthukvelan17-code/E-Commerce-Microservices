@@ -1,0 +1,11 @@
+{
+  "namespace": "com.ecommerce.common.event",
+  "type": "record",
+  "name": "OrderCreatedEventAvro",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "customerId", "type": "string"},
+    {"name": "totalAmount", "type": "double"},
+    {"name": "items", "type": {"type": "array", "items": "com.ecommerce.common.event.OrderItemAvro"}}
+  ]
+}

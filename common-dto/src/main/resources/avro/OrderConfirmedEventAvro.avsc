@@ -1,0 +1,9 @@
+{
+  "namespace": "com.ecommerce.common.event",
+  "type": "record",
+  "name": "OrderConfirmedEventAvro",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "customerId", "type": "string"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "namespace": "com.ecommerce.common.event",
+  "type": "record",
+  "name": "PaymentSuccessEventAvro",
+  "fields": [
+    {"name": "orderId", "type": "string"},
+    {"name": "paymentId", "type": "string"},
+    {"name": "customerId", "type": "string"},
+    {"name": "amount", "type": "double"}
+  ]
+}
