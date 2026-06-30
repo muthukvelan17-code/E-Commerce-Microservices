@@ -1,6 +1,5 @@
 package com.ecommerce.userservice.dto;
 
-import com.ecommerce.userservice.model.Role;
 import lombok.Builder;
 import lombok.Data;
 
