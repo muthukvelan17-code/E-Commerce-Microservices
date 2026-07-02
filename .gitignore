@@ -36,3 +36,16 @@ maven.zip
 maven/
 logs/
 *.log
+
+# Infrastructure local binaries and data
+infra/**/*.zip
+infra/**/*.exe
+infra/confluent/
+infra/confluent_temp/
+infra/mongo/
+infra/mongo_temp/
+infra/pgsql/
+infra/postgres-data/
+infra/mongo-data/
+infra/password.txt
+infra/**/*.log
