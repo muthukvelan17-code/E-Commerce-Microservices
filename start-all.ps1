@@ -1,10 +1,10 @@
 # Start Infrastructure
-Write-Host "Starting Docker Infrastructure (Kafka, Postgres, MongoDB, Observability)..." -ForegroundColor Cyan
-docker-compose up -d
+Write-Host "Starting Infrastructure (Kafka, Postgres, MongoDB, Schema Registry)..." -ForegroundColor Cyan
+& "$PSScriptRoot\infra\start_infra.ps1"
 
 # Wait for infrastructure to be ready
-Write-Host "Waiting for infrastructure to initialize (15 seconds)..." -ForegroundColor Yellow
-Start-Sleep -Seconds 15
+Write-Host "Waiting for infrastructure to initialize (5 seconds)..." -ForegroundColor Yellow
+Start-Sleep -Seconds 5
 
 # Function to start a Spring Boot jar in a new window
 function Start-Microservice {
