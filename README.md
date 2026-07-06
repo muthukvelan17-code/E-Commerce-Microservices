@@ -197,16 +197,38 @@ All 8 services register successfully with Eureka and report **UP** status:
 - **Prometheus**: `http://localhost:9090`
 - **Grafana**: `http://localhost:3000` (admin/admin)
 
-## Kubernetes Commands
+## Health Check
 
-Apply the cluster manifest:
+Verify all services are running:
+```powershell
+.\health-check.ps1
+```
+For detailed output:
+```powershell
+.\health-check.ps1 -Verbose
+```
+
+## Kubernetes Deployment
+
+All 9 microservices have production-ready K8s manifests with:
+- **Resource requests/limits** (CPU & memory)
+- **Liveness & readiness probes** (actuator health endpoints)
+- **ConfigMap-based** environment injection
+- **Labels** for `app.kubernetes.io/part-of` grouping
+
+Apply the cluster manifests:
 ```bash
 kubectl apply -f k8s/ecommerce-deployment.yaml
 ```
 Verify pods are running:
 ```bash
 kubectl get pods
+kubectl get services
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and PR process.
 
 ---
 
