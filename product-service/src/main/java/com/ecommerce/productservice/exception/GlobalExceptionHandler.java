@@ -1,4 +1,4 @@
-package com.ecommerce.userservice.exception;
+package com.ecommerce.productservice.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,4 +46,3 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 }
-

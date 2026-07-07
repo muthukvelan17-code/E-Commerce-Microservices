@@ -4,6 +4,7 @@ import com.ecommerce.orderservice.model.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,4 +15,6 @@ public class OrderResponse {
     private OrderStatus status;
     private Double totalAmount;
     private List<OrderItemDto> items;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

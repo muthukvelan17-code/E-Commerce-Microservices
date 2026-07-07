@@ -73,6 +73,12 @@ public class OrderService {
         return mapToResponse(savedOrder);
     }
 
+    public OrderResponse getOrderById(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+        return mapToResponse(order);
+    }
+
     public List<OrderResponse> getOrders(String customerId) {
         return orderRepository.findByCustomerId(customerId).stream()
                 .map(this::mapToResponse)
@@ -124,6 +130,8 @@ public class OrderService {
                 .status(order.getStatus())
                 .totalAmount(order.getTotalAmount())
                 .items(items)
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
                 .build();
     }
 }
