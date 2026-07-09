@@ -208,6 +208,48 @@ For detailed output:
 .\health-check.ps1 -Verbose
 ```
 
+## Interactive Web Dashboard
+
+A modern web-based monitoring and orchestration dashboard is included in the `dashboard/` directory.
+
+### Features:
+- **Orchestrate Services**: Spin up and shutdown the microservices infrastructure directly from the UI.
+- **Service Monitor**: Live health-status updates (UP/DOWN/TIMEOUT) for Eureka, Config Server, Gateway, and all business microservices.
+- **User Authentication**: Register/Login as a `CUSTOMER` or `ADMIN`.
+- **Catalogue & Inventory management**: Add new products and initialize stock levels (Requires `ADMIN` authentication).
+- **Interactive Saga Checkout**: Add items to your checkout cart, place orders, and visualize the **Saga Choreography Workflow** in real-time.
+
+### Running the Dashboard:
+1. Navigate to the dashboard directory:
+   ```bash
+   cd dashboard
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the dashboard server:
+   ```bash
+   npm start
+   ```
+4. Access the application in your browser: `http://localhost:3000`
+
+## End-to-End (E2E) API Verification
+
+To verify that the complete platform (API Gateway, Identity Service, Product Catalogue, Inventory Stocking, Order Placement, and Saga Event Broker Flow) is working correctly, you can run the automated test script:
+
+```powershell
+.\test_platform.ps1
+```
+
+This PowerShell script automates:
+1. Registering and logging in a new Customer to acquire a valid JWT.
+2. Registering and logging in an Admin user to gain catalogue modification privileges.
+3. Creating a new product category and product item through the API Gateway.
+4. Setting stock levels for the product in the Inventory database.
+5. Placing a new purchase order as the customer.
+6. Polling and printing the SAGA status transitions (`PENDING` -> `CONFIRMED` or `CANCELLED`).
+
 ## Kubernetes Deployment
 
 All 9 microservices have production-ready K8s manifests with:
