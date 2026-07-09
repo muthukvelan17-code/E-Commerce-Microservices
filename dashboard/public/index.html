@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Microservices Platform Dashboard</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Vanilla CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="glass-bg"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-network-wired logo-icon"></i>
+      <div>
+        <h1>ApexCommerce</h1>
+        <p>Distributed Event-Driven Saga Platform</p>
+      </div>
+    </div>
+    <div class="auth-status-container" id="auth-status-container">
+      <span class="badge badge-error"><i class="fa-solid fa-user-slash"></i> Anonymous</span>
+      <button class="btn btn-secondary btn-sm" onclick="showAuthModal()"><i class="fa-solid fa-right-to-bracket"></i> Login / Register</button>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="dashboard-grid">
+    <!-- Left Column: Health and Controls -->
+    <section class="card system-status-card">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fa-solid fa-server icon-blue"></i> Services Orchestrator</h2>
+        <div class="header-actions">
+          <button class="btn btn-icon" onclick="fetchStatus()" title="Refresh status"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+      </div>
+
+      <div class="system-controls">
+        <button class="btn btn-success btn-full" onclick="startServices()"><i class="fa-solid fa-play"></i> Start All Services</button>
+        <button class="btn btn-danger btn-full" onclick="stopServices()"><i class="fa-solid fa-stop"></i> Stop All Services</button>
+      </div>
+
+      <div class="services-list" id="services-list">
+        <div class="loading-placeholder">
+          <i class="fa-solid fa-circle-notch fa-spin"></i> Checking service health...
+        </div>
+      </div>
+    </section>
+
+    <!-- Center Column: Products and Catalogue -->
+    <section class="card product-catalog-card">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fa-solid fa-boxes-stacked icon-purple"></i> Product Catalogue</h2>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-sm" id="btn-add-product" onclick="showAddProductModal()" style="display:none;"><i class="fa-solid fa-plus"></i> Add Product</button>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Search products by keyword..." oninput="handleSearch()">
+      </div>
+
+      <div class="products-grid" id="products-grid">
+        <!-- Products will load here -->
+        <div class="empty-state">
+          <i class="fa-solid fa-box-open"></i>
+          <p>No products available. Please authenticate as ADMIN/SELLER to add items or verify your Services are running.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Cart and Saga Order Tracker -->
+    <div class="right-column-grid">
+      <!-- Shopping Cart -->
+      <section class="card cart-card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fa-solid fa-cart-shopping icon-green"></i> Checkout Cart</h2>
+        </div>
+        <div class="cart-items-container" id="cart-items">
+          <div class="empty-state-mini">
+            <p>Your checkout cart is empty.</p>
+          </div>
+        </div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span>Total:</span>
+            <span id="cart-total-value">$0.00</span>
+          </div>
+          <button class="btn btn-success btn-full" id="btn-checkout" onclick="checkout()" disabled><i class="fa-solid fa-credit-card"></i> Place Order (Saga checkout)</button>
+        </div>
+      </section>
+
+      <!-- Saga Order Monitor -->
+      <section class="card saga-monitor-card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fa-solid fa-diagram-next icon-orange"></i> Saga Order Monitor</h2>
+          <button class="btn btn-icon btn-sm" onclick="fetchOrders()" title="Refresh Orders"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+        <div class="orders-list" id="orders-list">
+          <div class="empty-state-mini">
+            <p>No active orders placed yet.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>User Authentication</h3>
+        <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="tabs">
+          <button class="tab-btn active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+          <button class="tab-btn" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" required placeholder="customer@example.com">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="Enter password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" onsubmit="handleRegister(event)" style="display: none;">
+          <div class="form-group">
+            <label for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" required placeholder="john.doe@example.com">
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" required placeholder="Choose password">
+          </div>
+          <div class="form-group">
+            <label for="reg-role">User Role</label>
+            <select id="reg-role" required>
+              <option value="CUSTOMER" selected>Customer</option>
+              <option value="ADMIN">Admin (Add Products)</option>
+              <option value="SELLER">Seller</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal-backdrop" id="product-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Create New Product</h3>
+        <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="product-form" onsubmit="handleAddProduct(event)">
+          <div class="form-group">
+            <label for="prod-name">Product Name</label>
+            <input type="text" id="prod-name" required placeholder="e.g. MacBook Pro M3">
+          </div>
+          <div class="form-group">
+            <label for="prod-sku">SKU Code</label>
+            <input type="text" id="prod-sku" required placeholder="e.g. MACBOOKPRO001">
+          </div>
+          <div class="form-group">
+            <label for="prod-price">Price ($)</label>
+            <input type="number" id="prod-price" step="0.01" min="0" required placeholder="1999.99">
+          </div>
+          <div class="form-group">
+            <label for="prod-stock">Initial Stock Quantity</label>
+            <input type="number" id="prod-stock" min="1" required placeholder="50">
+          </div>
+          <div class="form-group">
+            <label for="prod-desc">Description</label>
+            <textarea id="prod-desc" rows="3" placeholder="Describe the product details..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Save Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -49,3 +49,10 @@ infra/postgres-data/
 infra/mongo-data/
 infra/password.txt
 infra/**/*.log
+
+# Temporary Node dependencies
+node_modules/
+dashboard/node_modules/
+
+# Infrastructure logs
+infra/kafka-logs/

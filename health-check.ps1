@@ -43,7 +43,7 @@ foreach ($svc in $services) {
                 Write-Host "         Status: $($body.status)" -ForegroundColor DarkGray
             }
         } else {
-            Write-Host "  [WARN] $($svc.Name) (port $($svc.Port)) — HTTP $statusCode" -ForegroundColor Yellow
+            Write-Host "  [WARN] $($svc.Name) (port $($svc.Port)) - HTTP $statusCode" -ForegroundColor Yellow
             $unhealthy++
         }
     } catch {
@@ -54,7 +54,7 @@ foreach ($svc in $services) {
 
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Cyan
-Write-Host "  Results: $healthy UP / $unhealthy DOWN (of $($services.Count) services)" -ForegroundColor $(if ($unhealthy -eq 0) { "Green" } else { "Yellow" })
+Write-Host "  Results: $healthy UP / $unhealthy DOWN (of $($services.Count) services)" -ForegroundColor $(if ($unhealthy -eq 0) { 'Green' } else { 'Yellow' })
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host ""
 

@@ -16,7 +16,11 @@ function Start-Microservice {
     $JarPath = ".\$ServiceName\target\$ServiceName-1.0.0.jar"
     
     if (Test-Path $JarPath) {
-        Start-Process "java" -ArgumentList "-jar $JarPath" -WindowStyle Normal
+        $LogDir = "$PSScriptRoot\logs"
+        if (-not (Test-Path $LogDir)) {
+            New-Item -ItemType Directory -Path $LogDir | Out-Null
+        }
+        Start-Process "java" -ArgumentList "-jar $JarPath" -RedirectStandardOutput "$LogDir\$ServiceName.log" -RedirectStandardError "$LogDir\$ServiceName.err" -WindowStyle Hidden
         Start-Sleep -Seconds $WaitSeconds
     } else {
         Write-Host "Error: Cannot find $JarPath. Make sure you ran 'mvn clean install'." -ForegroundColor Red

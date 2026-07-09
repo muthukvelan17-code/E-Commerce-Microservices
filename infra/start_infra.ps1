@@ -21,11 +21,11 @@ Start-Sleep -Seconds 5
 
 Write-Host "Starting Kafka..." -ForegroundColor Green
 Start-Process -FilePath "$infraDir\confluent\bin\windows\kafka-server-start.bat" -ArgumentList "`"$infraDir\confluent\etc\kafka\server.properties`"" -WindowStyle Hidden
-Start-Sleep -Seconds 8
+Start-Sleep -Seconds 20
 
 Write-Host "Starting Schema Registry..." -ForegroundColor Green
 $srCp = "$infraDir\confluent\share\java\schema-registry\*;$infraDir\confluent\share\java\rest-utils\*;$infraDir\confluent\share\java\common-utils\*;$infraDir\confluent\share\java\kafka\*"
 Start-Process -FilePath "java" -ArgumentList "-cp `"$srCp`" io.confluent.kafka.schemaregistry.rest.SchemaRegistryMain `"$infraDir\confluent\etc\schema-registry\schema-registry.properties`"" -WindowStyle Hidden
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 10
 
 Write-Host "All infrastructure components started successfully!" -ForegroundColor Cyan
