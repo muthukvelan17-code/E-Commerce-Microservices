@@ -7,11 +7,13 @@ import com.ecommerce.userservice.dto.UserDto;
 import com.ecommerce.userservice.model.User;
 import com.ecommerce.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -19,7 +21,9 @@ public class UserService {
     private final JwtService jwtService;
 
     public AuthResponse signup(SignupRequest request) {
+        log.info("Attempting to sign up user with email: {}", request.getEmail());
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Signup failed: Email {} already exists", request.getEmail());
             throw new RuntimeException("Email already exists");
         }
 
@@ -31,18 +35,25 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
+        log.info("Successfully signed up user with ID: {} and email: {}", savedUser.getId(), savedUser.getEmail());
 
         return buildAuthResponse(savedUser);
     }
 
     public AuthResponse login(LoginRequest request) {
+        log.info("Attempting login for user: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    log.warn("Login failed: User with email {} not found", request.getEmail());
+                    return new RuntimeException("User not found");
+                });
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            log.warn("Login failed: Invalid credentials for user email {}", request.getEmail());
             throw new RuntimeException("Invalid credentials");
         }
 
+        log.info("Successfully logged in user with ID: {} and email: {}", user.getId(), user.getEmail());
         return buildAuthResponse(user);
     }
 
