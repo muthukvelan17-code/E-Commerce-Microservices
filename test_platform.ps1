@@ -30,7 +30,7 @@ $loginBody = @{
 
 try {
     $loginRes = Invoke-RestMethod -Uri "$gatewayUrl/api/v1/auth/login" -Method Post -Body $loginBody -ContentType "application/json"
-    $customerToken = $loginRes.token
+    $customerToken = $loginRes.accessToken
     Write-Host "Login Successful. JWT Token obtained." -ForegroundColor Green
 } catch {
     Write-Host "Login Failed: $_" -ForegroundColor Red
@@ -56,7 +56,7 @@ try {
         password = "password123"
     } | ConvertTo-Json
     $adminLoginRes = Invoke-RestMethod -Uri "$gatewayUrl/api/v1/auth/login" -Method Post -Body $adminLoginBody -ContentType "application/json"
-    $adminToken = $adminLoginRes.token
+    $adminToken = $adminLoginRes.accessToken
 } catch {
     Write-Host "Admin Registration/Login Failed: $_" -ForegroundColor Red
     exit 1

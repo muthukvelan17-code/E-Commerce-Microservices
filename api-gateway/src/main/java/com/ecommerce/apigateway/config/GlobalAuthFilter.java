@@ -12,10 +12,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.function.Predicate;
 
 @Component
+@Slf4j
 public class GlobalAuthFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
@@ -27,7 +30,8 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
     private final List<String> openEndpoints = List.of(
             "/api/v1/auth/login",
             "/api/v1/auth/signup",
-            "/eureka"
+            "/eureka",
+            "/actuator/health"
     );
 
     private final Predicate<ServerHttpRequest> isSecured = request -> {
@@ -84,6 +88,7 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange.mutate().request(mutatedRequest).build());
 
             } catch (Exception e) {
+                log.error("JWT Validation Error: ", e);
                 return onError(exchange, "Invalid token claims", HttpStatus.UNAUTHORIZED);
             }
         }

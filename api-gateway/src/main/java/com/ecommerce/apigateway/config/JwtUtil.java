@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import java.security.Key;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class JwtUtil {
 
     @Value("${jwt.secret}")
@@ -34,6 +37,7 @@ public class JwtUtil {
         try {
             return getClaims(token).getExpiration().before(new java.util.Date());
         } catch (Exception e) {
+            log.error("JWT Expiration Check Error: ", e);
             return true;
         }
     }
